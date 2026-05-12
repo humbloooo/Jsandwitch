@@ -4,101 +4,74 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 
-/**
- * Sublime Sandwich Shop Application
- * Allows users to select main ingredients and bread types.
- * Displays total price based on selection.
- */
 public class Jsandwitch extends JFrame implements ListSelectionListener {
-    private JList<String> mainList;
-    private JList<String> breadList;
-    private JLabel priceLabel;
-    private JLabel headerLabel;
+    // List boxes for choices
+    JList mainList;
+    JList breadList;
     
-    // Requirements: 3 main ingredients at 3 different prices
-    private String[] mainIngredients = {"Chicken Breast", "Roast Beef", "Garden Veggie"};
-    private double[] mainPrices = {7.50, 8.25, 6.95};
+    // Labels to show info
+    JLabel label1 = new JLabel("Select Main Ingredient:");
+    JLabel label2 = new JLabel("Select Bread Type:");
+    JLabel priceLabel = new JLabel("Total Price: $0.00");
     
-    // Requirements: List of at least five bread options
-    private String[] breadTypes = {"White", "Whole Wheat", "Rye", "Sourdough", "Multigrain", "Honey Oat"};
+    // Data for ingredients and prices
+    String[] mainIngredients = {"Chicken", "Beef", "Veggie"};
+    double[] mainPrices = {7.00, 8.00, 6.00};
+    
+    // Data for bread and prices (at least 5 options)
+    String[] breadTypes = {"White", "Wheat", "Rye", "Sourdough", "Oat"};
+    double[] breadPrices = {0.50, 0.75, 1.00, 1.25, 1.10};
     
     public Jsandwitch() {
         super("Sublime Sandwich Shop");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new FlowLayout());
         
-        // Header
-        headerLabel = new JLabel("Sublime Sandwich Shop", SwingConstants.CENTER);
-        headerLabel.setFont(new Font("Serif", Font.ITALIC | Font.BOLD, 24));
-        headerLabel.setForeground(new Color(139, 69, 19)); // Brownish color
-        add(headerLabel, BorderLayout.NORTH);
+        // Initialize lists
+        mainList = new JList(mainIngredients);
+        breadList = new JList(breadTypes);
         
-        // Selection Panel
-        JPanel selectionPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-        selectionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
-        // Main Ingredients List
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(new JLabel("Main Ingredient:"), BorderLayout.NORTH);
-        mainList = new JList<>(mainIngredients);
-        mainList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // Add listeners
         mainList.addListSelectionListener(this);
-        mainPanel.add(new JScrollPane(mainList), BorderLayout.CENTER);
-        
-        // Bread Types List
-        JPanel breadPanel = new JPanel(new BorderLayout());
-        breadPanel.add(new JLabel("Bread Type:"), BorderLayout.NORTH);
-        breadList = new JList<>(breadTypes);
-        breadList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         breadList.addListSelectionListener(this);
-        breadPanel.add(new JScrollPane(breadList), BorderLayout.CENTER);
         
-        selectionPanel.add(mainPanel);
-        selectionPanel.add(breadPanel);
-        add(selectionPanel, BorderLayout.CENTER);
+        // Add components to frame
+        add(label1);
+        add(new JScrollPane(mainList));
+        add(label2);
+        add(new JScrollPane(breadList));
         
-        // Footer/Price Panel
-        JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        priceLabel = new JLabel("Total Price: $0.00");
-        priceLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
-        priceLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 20));
-        footerPanel.add(priceLabel);
-        add(footerPanel, BorderLayout.SOUTH);
+        // Style and add price label
+        priceLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        add(priceLabel);
         
-        pack();
-        setSize(450, 300);
-        setLocationRelativeTo(null); // Center on screen
+        setSize(250, 350);
         setVisible(true);
     }
     
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-            updatePrice();
-        }
-    }
-    
-    private void updatePrice() {
-        int mainIndex = mainList.getSelectedIndex();
-        // Bread selection is required for a complete sandwich, but doesn't add to price in this model
-        // However, we check both for a "functional" feel.
+        // Get selected indexes
+        int mIndex = mainList.getSelectedIndex();
+        int bIndex = breadList.getSelectedIndex();
         
-        double totalPrice = 0;
-        if (mainIndex != -1) {
-            totalPrice = mainPrices[mainIndex];
+        double total = 0;
+        
+        // Add price of main ingredient if selected
+        if (mIndex != -1) {
+            total = total + mainPrices[mIndex];
         }
         
-        priceLabel.setText(String.format("Total Price: $%.2f", totalPrice));
+        // Add price of bread if selected
+        if (bIndex != -1) {
+            total = total + breadPrices[bIndex];
+        }
+        
+        // Update the label
+        priceLabel.setText("Total Price: $" + String.format("%.2f", total));
     }
     
     public static void main(String[] args) {
-        // Set System Look and Feel for a more premium experience
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            // Fallback to default
-        }
-        
-        SwingUtilities.invokeLater(() -> new Jsandwitch());
+        new Jsandwitch();
     }
 }

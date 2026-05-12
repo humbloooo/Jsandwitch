@@ -18,9 +18,9 @@ public class Jsandwitch extends JFrame implements ListSelectionListener {
     String[] mainIngredients = {"Chicken", "Beef", "Veggie"};
     double[] mainPrices = {7.00, 8.00, 6.00};
     
-    // Data for bread and prices (at least 5 options)
-    String[] breadTypes = {"White", "Wheat", "Rye", "Sourdough", "Oat"};
-    double[] breadPrices = {0.50, 0.75, 1.00, 1.25, 1.10};
+    // South African bread brands and prices
+    String[] breadTypes = {"Albany", "Banana bread", "Sasko", "Ritebrand", "Blue Ribbon"};
+    double[] breadPrices = {1.50, 2.00, 1.40, 0.90, 1.45};
     
     public Jsandwitch() {
         super("Sublime Sandwich Shop");
